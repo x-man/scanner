@@ -1,0 +1,8 @@
+#django
+*/migrations/
+
+#windows
+Desktop.ini
+
+#python
+*.py[cod]
