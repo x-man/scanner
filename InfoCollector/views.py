@@ -26,3 +26,4 @@ def deleteDomain(request,id):
 
 def subDomainBrute(request,id):
 	domain = get_object_or_404(Domain, pk=id)
+	
