@@ -7,8 +7,8 @@
 """
 
 import gevent
-from gevent import monkey
-monkey.patch_all()
+# from gevent import monkey
+# monkey.patch_all()
 from gevent.pool import Pool
 from gevent.queue import PriorityQueue
 import sys
@@ -18,7 +18,10 @@ import time
 import optparse
 import os
 from lib.consle_width import getTerminalSize
-
+from celery import task
+import re, requests, bs4
+from InfoCollector.models import Domain, SubDomain, Ip
+from django.shortcuts import get_object_or_404
 
 class SubNameBrute:
     def __init__(self, target, options):
@@ -338,4 +341,26 @@ class Option(object):
         self.threads = threads
         self.output = output
 
+@task
+def brute(id):
+    domain = get_object_or_404(Domain, pk=id).domain
+    options = Option()
+    d = SubNameBrute(domain, options=options)
+    d.run()
+    d.outfile.flush()
+    d.outfile.close()
+    subDomainFile  = d.output
+    with open(subDomainFile) as fr:
+        regex = re.compile('[\s,]+')
+        for line in fr:
+            line = line.strip()
+            subDomains = regex.split(line)
+            subdomain = subDomains[0]
+            html = requests.get('http://'+subdomain).content
+            html = bs4.BeautifulSoup(html)
+            subdomain = domain.subDomain_set.create(subdomain=subdomain,title=html.title.text,add_date=timezone.now())
 
+            for ip in subDomains[1:]:
+                subdomain.ip_set.create(ip=ip, date=timezone.now())
+    domain.status = 3
+    domain.save()

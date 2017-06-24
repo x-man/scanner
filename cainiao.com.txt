@@ -1,0 +1,12 @@
+www.cainiao.com               	123.125.18.106, 123.125.18.107, 123.125.7.238, 123.125.7.239
+mail.cainiao.com              	42.156.140.97
+member.cainiao.com            	140.205.230.45
+sh.wagbridge.cainiao.com      	140.205.134.243
+data.cainiao.com              	140.205.32.57
+fly.cainiao.com               	140.205.32.57
+c.cainiao.com                 	140.205.32.57
+login.cainiao.com             	140.205.250.51
+cie.cainiao.com               	140.205.230.45
+park.cainiao.com              	140.205.32.57
+account.cainiao.com           	140.205.250.51
+pass.cainiao.com              	140.205.32.57

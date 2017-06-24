@@ -1,0 +1,64 @@
+www.baidu.com                 	61.135.169.121, 61.135.169.125
+home.baidu.com                	202.108.23.231
+cs.baidu.com                  	10.91.160.210
+codesearch.baidu.com          	10.91.160.210
+my.baidu.com                  	61.135.162.37
+search.baidu.com              	180.149.131.33
+forum.baidu.com               	10.26.109.19
+people.baidu.com              	180.149.131.33
+wenku.baidu.com               	123.125.112.242, 61.135.185.66
+pp.baidu.com                  	61.135.185.191
+i.baidu.com                   	61.135.185.175
+um.baidu.com                  	61.135.185.125
+passport.baidu.com            	111.206.37.245, 61.135.186.231
+app.baidu.com                 	112.80.255.227, 123.125.112.192
+admin.baidu.com               	10.26.109.19
+maven.baidu.com               	10.48.57.24
+ss.baidu.com                  	220.181.111.202, 61.135.186.150
+user.baidu.com                	10.242.113.33
+a.baidu.com                   	112.80.248.124, 123.125.114.38
+web.baidu.com                 	10.48.30.87
+news.baidu.com                	153.3.236.50, 202.108.23.82, 61.135.162.174, 61.135.162.176
+cp.baidu.com                  	61.155.137.249
+games.baidu.com               	106.39.162.102
+info.baidu.com                	61.135.185.62
+dev.baidu.com                 	112.80.248.186
+music.baidu.com               	180.76.141.217
+pay.baidu.com                 	61.135.186.206
+support.baidu.com             	123.125.114.45
+bip.baidu.com                 	10.36.48.24
+u.baidu.com                   	61.135.185.111
+help.baidu.com                	117.185.16.15, 119.75.219.60, 180.149.131.88, 220.181.163.54
+union.baidu.com               	61.135.162.184
+com.baidu.com                 	10.26.137.29
+up.baidu.com                  	10.26.3.49, 10.36.3.27
+offlinea.shifen.bae.baidu.com 	10.26.3.49, 10.36.3.27
+e.baidu.com                   	180.76.138.9
+resume.baidu.com              	10.58.98.34
+ac.baidu.com                  	112.80.248.234, 202.108.23.221
+ff.baidu.com                  	61.135.185.236
+manager.baidu.com             	10.26.109.19
+office.baidu.com              	10.99.72.22
+profile.baidu.com             	10.58.177.42
+cc.baidu.com                  	10.26.7.113, 10.36.253.83
+ccs.baidu.com                 	10.26.7.113, 10.36.253.83
+noah.baidu.com                	10.26.7.113, 10.36.253.83
+portal.baidu.com              	172.22.1.82
+bbs.baidu.com                 	111.206.223.249
+post.baidu.com                	111.206.223.249
+edu.baidu.com                 	202.108.23.128
+opera.baidu.com               	10.40.8.31
+ae.baidu.com                  	111.13.101.208, 123.125.114.144, 180.149.132.47, 220.181.57.217
+media.baidu.com               	123.125.112.68, 123.125.115.15
+member.baidu.com              	106.39.162.104
+k.baidu.com                   	202.108.23.47
+ue.baidu.com                  	202.108.23.222, 61.135.186.230
+shop.baidu.com                	123.125.112.68, 123.125.115.15
+tuan.baidu.com                	61.135.162.145
+store.baidu.com               	123.125.112.68, 123.125.115.15
+ab.baidu.com                  	10.26.209.25
+ar.baidu.com                  	123.125.115.215
+h5.baidu.com                  	119.75.222.180
+ko.baidu.com                  	111.202.114.61, 112.80.248.190
+lab.baidu.com                 	202.108.23.222, 61.135.186.230
+ns1.baidu.com                 	202.108.22.220
