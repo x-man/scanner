@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 from django.utils import timezone
 from django.shortcuts import render, get_object_or_404
-from InfoCollector.models import Domain, SubDomain, Ip
+from InfoCollector.models import Domain, SubDomain, Ip, WebFingerprint
 from .tasks import brute, scan_subdomain
 # Create your views here.
 def index(request):
@@ -48,6 +48,9 @@ def show(request,param):
 		pass
 	elif param == 'vuln':
 		pass
+	elif param == 'webfingerprint':
+		webfinerprints = WebFingerprint.objects.all()
+		context = {'webfinerprints':webfinerprints}
 	return render(request, 'infocollector/domain.html', context)
 
 def subDomainScan(request,id):

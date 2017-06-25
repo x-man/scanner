@@ -13,6 +13,32 @@
     <script type="text/javascript" src="{% static 'infocollector/control.js' %}"></script>
 </head>
 <body>
+    <div class="modal fade" id="add_webfingerprint" tabindex="-1" role="dialog" aria-labelledby="webfingerprint">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4>添加web指纹</h4>
+                </div>
+                <div class="modal-body">
+                    <form action="" method="post" class="form-horizontal">
+                        <div class="form-group">
+                            <label for="app">应用</label>
+                            <input type="text" name="app" id="app" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="app_description">应用描述</label>
+                            <input type="text" name="app_description" id="app_description" class="form-control">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary">添加</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container-fluid">
         <div class="navbar-header">
@@ -45,7 +71,7 @@
             <li id="vulnInfo" class="sideMenu"><a id="show_vulnInfo" href="{% url 'infocollector:show' 'vuln' %}">漏洞信息</a></li>
           </ul>
           <ul class="nav nav-sidebar">
-            <li><a href="">Nav item</a></li>
+            <li id="webFingerprint" class="sideMenu"><a id="show_webFingerprint" href="{% url 'infocollector:show' 'webfingerprint' %}">web指纹库</a></li>
             <li><a href="">Nav item again</a></li>
             <li><a href="">One more nav</a></li>
             <li><a href="">Another nav item</a></li>
@@ -58,26 +84,26 @@
           </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-            <div>
-                <form class="form-inline" action="{% url 'infocollector:collect' %}" method="post">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <label for="domain">domain:</label>
-                        <input type="text" name="domain" id="domain" class="form-control" placeholder="domain">
-                    </div>
-                    <div class="form-group">
-                        <label for="company">company:</label>
-                        <input type="text" name="company" id="company" class="form-control" placeholder="company">
-                    </div>
-                    <input id="add_domain" type="submit" value="添加" class="btn btn-primary">
-                </form>
-            </div>
-            <div class="table-responsive">
-                <table id="info_table" class="table table-bordered">
-                    {% if domains is not None %}
-                        <script type="text/javascript">
-                            changeSideMenuStatus("domainInfo");
-                        </script>
+            {% if domains is not None %}
+                <script type="text/javascript">
+                    changeSideMenuStatus("domainInfo");
+                </script>
+                <div>
+                    <form class="form-inline" action="{% url 'infocollector:collect' %}" method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="domain">domain:</label>
+                            <input type="text" name="domain" id="domain" class="form-control" placeholder="domain">
+                        </div>
+                        <div class="form-group">
+                            <label for="company">company:</label>
+                            <input type="text" name="company" id="company" class="form-control" placeholder="company">
+                        </div>
+                        <input id="add_domain" type="submit" value="添加" class="btn btn-primary">
+                    </form>
+                </div>
+                <div class="table-responsive">
+                    <table id="info_table" class="table table-bordered">
                         <tr>
                             <th>id</th>
                             <th>域名</th>
@@ -103,10 +129,14 @@
                                 </td>
                             </tr>
                         {% endfor %}
-                    {% elif subdomains is not None %}
-                        <script type="text/javascript">
-                            changeSideMenuStatus("subdomainInfo");
-                        </script>
+                    </table>
+                </div>
+            {% elif subdomains is not None %}
+                <script type="text/javascript">
+                    changeSideMenuStatus("subdomainInfo");
+                </script>
+                <div class="table-responsive">
+                    <table id="info_table" class="table table-bordered">
                         <tr>
                             <th>id</th>
                             <th>子域名</th>
@@ -138,10 +168,14 @@
                                 </td>
                             </tr>
                         {% endfor %}
-                    {% elif ips is not None %}
-                        <script type="text/javascript">
-                            changeSideMenuStatus("ipInfo");
-                        </script>
+                    </table>
+                </div>
+            {% elif ips is not None %}
+                <script type="text/javascript">
+                    changeSideMenuStatus("ipInfo");
+                </script>
+                <div class="table-responsive">
+                    <table id="info_table" class="table table-bordered">
                         <tr>
                             <th>id</th>
                             <th>IP地址</th>
@@ -151,7 +185,11 @@
                             <th>状态</th>
                             <th>操作</th>
                         </tr>
-                    {% elif ports is not None %}
+                    </table>
+                </div>
+            {% elif ports is not None %}
+                <div class="table-responsive">
+                    <table id="info_table" class="table table-bordered">
                         <tr>
                             <th>id</th>
                             <th>端口号</th>
@@ -161,7 +199,11 @@
                             <th>状态</th>
                             <th>操作</th>
                         </tr>
-                    {% elif vulns is not None %}
+                    </table>
+                </div>
+            {% elif vulns is not None %}
+                <div class="table-responsive">
+                    <table id="info_table" class="table table-bordered">
                         <tr>
                             <th>id</th>
                             <th>漏洞</th>
@@ -171,9 +213,38 @@
                             <th>状态</th>
                             <th>操作</th>
                         </tr>
-                    {% endif %}
-                </table>
-            </div>
+                    </table>
+                </div>
+            {% elif webfinerprints is not None %}
+                <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#add_webfingerprint">添加</button>
+                <div class="table-responsive">
+                    <table id="info_table" class="table table-bordered">
+                        <tr>
+                            <th>id</th>
+                            <th>应用</th>
+                            <th>应用描述</th>
+                            <th>规则</th>
+                            <th>操作</th>
+                        </tr>
+                        {% for webfinerprint in webfinerprints %}
+                            <tr>
+                                <td>{{ webfinerprint.id }}</td>
+                                <td>{{ webfinerprint.app }}</td>
+                                <td>{{ webfinerprint.app_description }}</td>
+                                <td>{{ subdomain.rule }}</td>
+                                <td>
+                                    <a href="">
+                                        <span class="glyphicon glyphicon-pencil"></span>
+                                    </a>
+                                    <a href="">
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            {% endif %}
         </div>
       </div>
     </div>

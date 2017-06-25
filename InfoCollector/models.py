@@ -34,3 +34,9 @@ class Ip(models.Model):
     date = models.DateTimeField('add date')
     subdomain = models.ForeignKey(SubDomain)
     status = models.IntegerField(default=1, null=True)
+
+class WebFingerprint(models.Model):
+    'table web fingerprint'
+    app = models.CharField(max_length=50)
+    app_description = models.CharField(max_length=50,null=True)
+    rule = models.CharField(max_length=200,null=True)

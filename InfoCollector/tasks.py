@@ -253,6 +253,7 @@ class SubNameBrute:
                     else:
                         self.found_subs.add(sub)
 
+                    tmp_answers = answers
                     try:
                         answers = self.resolvers[j].query(cur_sub_domain, 'cname')
                         cname = answers[0].target.to_unicode().rstrip('.')
@@ -292,8 +293,8 @@ class SubNameBrute:
                     #     title = html.title.text if html.title else None
                     #     subdomain = domain.subdomain_set.create(subdomain=cur_sub_domain,title=title,add_date=timezone.now())
                     subdomain = domain.subdomain_set.create(subdomain=cur_sub_domain,add_date=timezone.now())
-                    for answer in answers:
-                        subdomain.ip_set.create(ip=answers.address, date=timezone.now())
+                    for answer in tmp_answers:
+                        subdomain.ip_set.create(ip=answer.address, date=timezone.now())
 
                     try:
                         self.resolvers[j].query('lijiejietest.' + cur_sub_domain)
