@@ -26,6 +26,8 @@ def deleteDomain(request,id):
 	return render(request, 'infocollector/domain.html', context)
 
 def subDomainBrute(request,id):
+	domain.status = 2
+	domain.save()
 	brute.delay(id)
 
 	domains = Domain.objects.all()
@@ -49,6 +51,8 @@ def show(request,param):
 	return render(request, 'infocollector/domain.html', context)
 
 def subDomainScan(request,id):
+	subdomain.status = 2
+	subdomain.save()
 	scan_subdomain.delay(id)
 
 	subdomains = SubDomain.objects.all()

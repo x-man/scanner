@@ -23,6 +23,7 @@ import re, requests, bs4
 from InfoCollector.models import Domain, SubDomain, Ip
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
+from requests.exceptions import ConnectionError, ReadTimeout
 
 class SubNameBrute:
     def __init__(self, target, options):
@@ -359,8 +360,6 @@ class Option(object):
 @task
 def brute(id):
     domain = get_object_or_404(Domain, pk=id)
-    domain.status = 2
-    domain.save()
     options = Option()
     d = SubNameBrute(domain.domain, options=options)
     d.run()
@@ -393,8 +392,6 @@ def brute(id):
 @task
 def scan_subdomain(id):
     subdomain = get_object_or_404(SubDomain, pk=id)
-    subdomain.status = 2
-    subdomain.save()
     url = 'http://' + subdomain.subdomain
     try:
         headers = {'User-Agent' : 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:54.0) Gecko/20100101 Firefox/54.0'}
@@ -406,10 +403,11 @@ def scan_subdomain(id):
         subdomain.title = title
         subdomain.server = server
         subdomain.is_access = 1
+        subdomain.status = 3
         subdomain.save()
-    except ConnectionError,e:
+    except (Exception,ReadTimeout),e:
+        subdomain.status = 4
         subdomain.is_access = 2
         subdomain.save()
-
-    subdomain.status = 3
-    subdomain.save()
+    except:
+        pass

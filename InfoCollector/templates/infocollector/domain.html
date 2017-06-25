@@ -111,6 +111,8 @@
                             <th>id</th>
                             <th>子域名</th>
                             <th>网站标题</th>
+                            <th>服务器</th>
+                            <th>可访问</th>
                             <th>添加日期</th>
                             <th>所属域名</th>
                             <th>状态</th>
@@ -121,11 +123,13 @@
                                 <td>{{ subdomain.id }}</td>
                                 <td>{{ subdomain.subdomain }}</td>
                                 <td>{{ subdomain.title }}</td>
+                                <td>{{ subdomain.server }}</td>
+                                <td>{{ subdomain.is_access }}</td>
                                 <td>{{ subdomain.add_date }}</td>
                                 <td>{{ subdomain.domain.domain }}</td>
                                 <td>{{ subdomain.status }}</td>
                                 <td>
-                                    <a href="">
+                                    <a href="{% url 'infocollector:subDomainScan' subdomain.id %}">
                                         <span class="glyphicon glyphicon-play"></span>
                                     </a>
                                     <a href="">
