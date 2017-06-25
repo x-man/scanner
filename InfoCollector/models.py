@@ -39,4 +39,7 @@ class WebFingerprint(models.Model):
     'table web fingerprint'
     app = models.CharField(max_length=50)
     app_description = models.CharField(max_length=50,null=True)
-    rule = models.CharField(max_length=200,null=True)
+    rule_kind = models.CharField(max_length=50,null=True)
+    rule_type = models.CharField(max_length=50,null=True)
+    target = models.CharField(max_length=100,null=True)
+    content = models.CharField(max_length=100,null=True)

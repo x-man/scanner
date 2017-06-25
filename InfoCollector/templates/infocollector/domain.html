@@ -13,29 +13,67 @@
     <script type="text/javascript" src="{% static 'infocollector/control.js' %}"></script>
 </head>
 <body>
-    <div class="modal fade" id="add_webfingerprint" tabindex="-1" role="dialog" aria-labelledby="webfingerprint">
-        <div class="modal-dialog" role="document">
+    <div class="modal fade bs-example-modal-lg" id="add_webfingerprint" tabindex="-1" role="dialog" aria-labelledby="webfingerprint">
+        <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4>添加web指纹</h4>
+                    <h4 class="modal-title">添加web指纹</h4>
                 </div>
-                <div class="modal-body">
-                    <form action="" method="post" class="form-horizontal">
+                <form action="{% url 'infocollector:addWebFingerprint' %}" method="post" class="form-horizontal">
+                    <div class="modal-body">
+                        {% csrf_token %}
                         <div class="form-group">
-                            <label for="app">应用</label>
-                            <input type="text" name="app" id="app" class="form-control">
+                            <label for="app" class="col-sm-2 control-label">应用</label>
+                            <div class="col-sm-9">
+                                <input type="text" name="app" id="app" class="form-control">
+                            </div>
                         </div>
                         <div class="form-group">
-                            <label for="app_description">应用描述</label>
-                            <input type="text" name="app_description" id="app_description" class="form-control">
+                            <label for="app_description" class="col-sm-2 control-label">应用描述</label>
+                            <div class="col-sm-9">
+                                <input type="text" name="app_description" id="app_description" class="form-control">
+                            </div>
                         </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                    <button type="button" class="btn btn-primary">添加</button>
-                </div>
+                        <hr>
+                        <h4>规则设置</h4>
+                        <div class="form-group">
+                            <label for="rule_kind" class="col-sm-2 control-label">规则选项</label>
+                            <div class="col-sm-9">
+                                <select class="form-control" name="rule_kind" id="rule_kind">
+                                    <option value="app_rule">应用规则</option>
+                                    <option value="version_rule">版本规则</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="rule_type" class="col-sm-2 control-label">类型</label>
+                            <div class="col-sm-9">
+                                <select class="form-control" name="rule_type" id="rule_type">
+                                    <option value="file">file</option>
+                                    <option value="content">content</option>
+                                    <option value="filemd5">filemd5</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="target" class="col-sm-2 control-label">目标</label>
+                            <div class="col-sm-9">
+                                <input type="text" name="target" id="target" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="content" class="col-sm-2 control-label">内容</label>
+                            <div class="col-sm-9">
+                                <input type="text" name="content" id="content" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="submit" class="btn btn-primary" id="add_rule">添加</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -64,7 +102,7 @@
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            <li id="domainInfo" class="active sideMenu"><a id="show_domainInfo" href="{% url 'infocollector:show' 'domain' %}">域名信息<span class="sr-only">(current)</span></a></li>
+            <li id="domainInfo" class="sideMenu"><a id="show_domainInfo" href="{% url 'infocollector:show' 'domain' %}">域名信息<span class="sr-only">(current)</span></a></li>
             <li id="subdomainInfo" class="sideMenu"><a id="show_subdomainInfo" href="{% url 'infocollector:show' 'subdomain' %}">子域名信息</a></li>
             <li id="ipInfo" class="sideMenu"><a id="show_ipInfo" href="{% url 'infocollector:show' 'ip' %}">IP信息</a></li>
             <li id="portInfo" class="sideMenu"><a id="show_portInfo" href="{% url 'infocollector:show' 'port' %}">端口信息</a></li>
@@ -215,7 +253,10 @@
                         </tr>
                     </table>
                 </div>
-            {% elif webfinerprints is not None %}
+            {% elif webfingerprints is not None %}
+                <script type="text/javascript">
+                    changeSideMenuStatus("webFingerprint");
+                </script>
                 <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#add_webfingerprint">添加</button>
                 <div class="table-responsive">
                     <table id="info_table" class="table table-bordered">
@@ -226,7 +267,7 @@
                             <th>规则</th>
                             <th>操作</th>
                         </tr>
-                        {% for webfinerprint in webfinerprints %}
+                        {% for webfinerprint in webfingerprints %}
                             <tr>
                                 <td>{{ webfinerprint.id }}</td>
                                 <td>{{ webfinerprint.app }}</td>
@@ -236,7 +277,7 @@
                                     <a href="">
                                         <span class="glyphicon glyphicon-pencil"></span>
                                     </a>
-                                    <a href="">
+                                    <a href="{% url 'infocollector:deleteWebFingerprint' webfinerprint.id %}">
                                         <span class="glyphicon glyphicon-remove"></span>
                                     </a>
                                 </td>

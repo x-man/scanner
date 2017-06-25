@@ -49,8 +49,8 @@ def show(request,param):
 	elif param == 'vuln':
 		pass
 	elif param == 'webfingerprint':
-		webfinerprints = WebFingerprint.objects.all()
-		context = {'webfinerprints':webfinerprints}
+		webfingerprints = WebFingerprint.objects.all()
+		context = {'webfingerprints':webfingerprints}
 	return render(request, 'infocollector/domain.html', context)
 
 def subDomainScan(request,id):
@@ -60,4 +60,26 @@ def subDomainScan(request,id):
 
 	subdomains = SubDomain.objects.all()
 	context = {'subdomains':subdomains}
+	return render(request, 'infocollector/domain.html', context)
+
+def addWebFingerprint(request):
+	app = request.POST['app'] if 'app' in request.POST else ''
+	app_description = request.POST['app_description'] if 'app_description' in request.POST else ''
+	rule_kind = request.POST['rule_kind'] if 'rule_kind' in request.POST else ''
+	rule_type = request.POST['rule_type'] if 'rule_type' in request.POST else ''
+	target = request.POST['target'] if 'target' in request.POST else ''
+	content = request.POST['content'] if 'content' in request.POST else ''
+	webfingerprint = WebFingerprint(app=app, app_description=app_description, rule_kind=rule_kind, 
+		rule_type=rule_type, target=target, content=content)
+	webfingerprint.save()
+
+	webfingerprints = WebFingerprint.objects.all()
+	context = {'webfingerprints':webfingerprints}
+	return render(request, 'infocollector/domain.html', context)
+
+def deleteWebFingerprint(request,id):
+	webfingerprint = get_object_or_404(WebFingerprint, pk=id)
+	webfingerprint.delete()
+	webfingerprints = WebFingerprint.objects.all()
+	context = {'webfingerprints':webfingerprints}
 	return render(request, 'infocollector/domain.html', context)
