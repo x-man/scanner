@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
-
+# 密码都是乱写的，不要当真
 BROKER_URL = 'redis://:prng386@10.108.97.7:6379'
 CELERY_RESULT_BACKEND = 'redis://:prng386@10.108.97.7:6379/0'
 CELERY_ACCEPT_CONTENT = ['application/json']
