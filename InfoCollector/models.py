@@ -15,9 +15,16 @@ class SubDomain(models.Model):
     'table subdomain'
     subdomain = models.CharField(max_length=50)
     title = models.CharField(max_length=50,null=True)
+    server = models.CharField(max_length=50,null=True)
+    # server_version = models.CharField(max_length=50,null=True)
+    dev_language = models.CharField(max_length=50,null=True)
+    # language_version = models.CharField(max_length=50,null=True)
+    cms = models.CharField(max_length=50,null=True)
+    # cms_version = models.CharField(max_length=50,null=True)
     add_date = models.DateTimeField('date add')
     domain = models.ForeignKey(Domain)
     status = models.IntegerField(default=1, null=True)
+    is_access = models.IntegerField(default=0, null=True)
 
 class Ip(models.Model):
     'table ip'

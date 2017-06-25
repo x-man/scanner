@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 from django.utils import timezone
 from django.shortcuts import render, get_object_or_404
 from InfoCollector.models import Domain, SubDomain, Ip
-from .tasks import brute
+from .tasks import brute, scan_subdomain
 # Create your views here.
 def index(request):
 	return render(request, 'infocollector/index.html')
@@ -26,13 +26,31 @@ def deleteDomain(request,id):
 	return render(request, 'infocollector/domain.html', context)
 
 def subDomainBrute(request,id):
-	domain = get_object_or_404(Domain, pk=id)
-	domain.status = 2
-	domain.save()
-
 	brute.delay(id)
-	domain.status = 4
-	domain.save()
+
 	domains = Domain.objects.all()
 	context = {'domains':domains}
+	return render(request, 'infocollector/domain.html', context)
+
+def show(request,param):
+	if param == 'domain':
+		domains = Domain.objects.all()
+		context = {'domains':domains}
+	elif param == 'subdomain':
+		subdomains = SubDomain.objects.all()
+		context = {'subdomains':subdomains}
+	elif param == 'ip':
+		ips = Ip.objects.all()
+		context = {'ips':ips}
+	elif param == 'port':
+		pass
+	elif param == 'vuln':
+		pass
+	return render(request, 'infocollector/domain.html', context)
+
+def subDomainScan(request,id):
+	scan_subdomain.delay(id)
+
+	subdomains = SubDomain.objects.all()
+	context = {'subdomains':subdomains}
 	return render(request, 'infocollector/domain.html', context)

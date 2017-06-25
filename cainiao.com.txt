@@ -10,3 +10,4 @@ cie.cainiao.com               	140.205.230.45
 park.cainiao.com              	140.205.32.57
 account.cainiao.com           	140.205.250.51
 pass.cainiao.com              	140.205.32.57
+supplier.cainiao.com          	140.205.250.51

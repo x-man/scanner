@@ -22,6 +22,7 @@ from celery import task
 import re, requests, bs4
 from InfoCollector.models import Domain, SubDomain, Ip
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
 
 class SubNameBrute:
     def __init__(self, target, options):
@@ -279,6 +280,20 @@ class SubNameBrute:
                     self._print_msg()
                     self.outfile.write(cur_sub_domain.ljust(30) + '\t' + ips + '\n')
                     self.outfile.flush()
+                    domain = get_object_or_404(Domain, domain=self.target)
+                    # try:
+                    # 	headers = {'User-Agent' : 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:54.0) Gecko/20100101 Firefox/54.0'}
+                    #     html = requests.get('http://'+cur_sub_domain,timeout=0.1,headers=headers).content
+                    # except Exception,e:
+                    #     subdomain = domain.subdomain_set.create(subdomain=cur_sub_domain,add_date=timezone.now())
+                    # else:
+                    #     html = bs4.BeautifulSoup(html)
+                    #     title = html.title.text if html.title else None
+                    #     subdomain = domain.subdomain_set.create(subdomain=cur_sub_domain,title=title,add_date=timezone.now())
+                    subdomain = domain.subdomain_set.create(subdomain=cur_sub_domain,add_date=timezone.now())
+                    for answer in answers:
+                        subdomain.ip_set.create(ip=answers.address, date=timezone.now())
+
                     try:
                         self.resolvers[j].query('lijiejietest.' + cur_sub_domain)
                     except (dns.resolver.NXDOMAIN, dns.resolver.NoAnswer) as e:
@@ -343,24 +358,58 @@ class Option(object):
 
 @task
 def brute(id):
-    domain = get_object_or_404(Domain, pk=id).domain
+    domain = get_object_or_404(Domain, pk=id)
+    domain.status = 2
+    domain.save()
     options = Option()
-    d = SubNameBrute(domain, options=options)
+    d = SubNameBrute(domain.domain, options=options)
     d.run()
     d.outfile.flush()
     d.outfile.close()
-    subDomainFile  = d.output
-    with open(subDomainFile) as fr:
-        regex = re.compile('[\s,]+')
-        for line in fr:
-            line = line.strip()
-            subDomains = regex.split(line)
-            subdomain = subDomains[0]
-            html = requests.get('http://'+subdomain).content
-            html = bs4.BeautifulSoup(html)
-            subdomain = domain.subDomain_set.create(subdomain=subdomain,title=html.title.text,add_date=timezone.now())
 
-            for ip in subDomains[1:]:
-                subdomain.ip_set.create(ip=ip, date=timezone.now())
+    # subDomainFile  = d.output
+    # with open(subDomainFile) as fr:
+    #     regex = re.compile('[\s,]+')
+    #     for line in fr:
+    #         line = line.strip()
+    #         subDomains = regex.split(line)
+    #         subdomain = subDomains[0]
+    #         try:
+    #         	headers = {'User-Agent' : 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:54.0) Gecko/20100101 Firefox/54.0'}
+    #             html = requests.get('http://'+subdomain,timeout=0.1,headers=headers).content
+    #         except Exception,e:
+    #             subdomain = domain.subdomain_set.create(subdomain=subdomain,add_date=timezone.now())
+    #         else:
+    #             html = bs4.BeautifulSoup(html)
+    #             title = html.title.text if html.title else None
+    #             subdomain = domain.subdomain_set.create(subdomain=subdomain,title=title,add_date=timezone.now())
+            
+    #         for ip in subDomains[1:]:
+    #             subdomain.ip_set.create(ip=ip, date=timezone.now())
     domain.status = 3
     domain.save()
+
+
+@task
+def scan_subdomain(id):
+    subdomain = get_object_or_404(SubDomain, pk=id)
+    subdomain.status = 2
+    subdomain.save()
+    url = 'http://' + subdomain.subdomain
+    try:
+        headers = {'User-Agent' : 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:54.0) Gecko/20100101 Firefox/54.0'}
+        response = requests.get(url,timeout=0.1,headers=headers)
+        html = response.content
+        html = bs4.BeautifulSoup(html)
+        title = html.title.text if html.title else None
+        server = response.headers['server'] if 'server' in response.headers else None
+        subdomain.title = title
+        subdomain.server = server
+        subdomain.is_access = 1
+        subdomain.save()
+    except ConnectionError,e:
+        subdomain.is_access = 2
+        subdomain.save()
+
+    subdomain.status = 3
+    subdomain.save()
